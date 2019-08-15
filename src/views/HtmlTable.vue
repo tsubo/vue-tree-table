@@ -4,86 +4,77 @@
 
     <table class="table table-bordered">
       <thead>
-        <th></th>
-        <th>コード<br>レポートNo</th>
-        <th>サービス名</th>
-        <th>国</th>
-        <th>利用月</th>
-        <th>登録日</th>
-        <th>総再生<br>回数</th>
-        <th>純収益</th>
-        <th>総会員数<br>MAU</th>
-        <th>金額合計/[報告]</th>
-        <th>金額合計/[計算]</th>
-        <th>前回報告<br>金額合計</th>
-        <th>取込<br>状況</th>
-        <th>操作</th>
+        <th class="expand-cursor"></th>
+        <th>Col-1</th>
+        <th>Col-2</th>
+        <th>Col-3</th>
+        <th>Col-4</th>
+        <th>Col-5</th>
       </thead>
       <tbody>
         <tr>
-          <td>▼</td>
-          <td>0010-0056</td>
-          <td>株式会社レコチョク</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>5,919,592</td>
-          <td>5,919,592</td>
-          <td>839,760</td>
-          <td></td>
-          <td></td>
+          <td>
+            <i class="lv-1 fas fa-angle-down"></i>
+          </td>
+          <td>Lv1-R1-C1</td>
+          <td colspan="4">Lv1-R1-C2</td>
         </tr>
         <tr>
-          <td>　▼</td>
-          <td>XXX1</td>
-          <td>レコチョク MusicStore</td>
-          <td>JP</td>
-          <td colspan="2">DL / 通常 / ハイレゾ / 映像</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>744,160</td>
-          <td>744,160</td>
-          <td>91,000</td>
-          <td></td>
-          <td></td>
+          <td>
+            <i class="lv-2 fas fa-angle-down"></i>
+          </td>
+          <td>Lv2-R2-C1</td>
+          <td>Lv2-R2-C2</td>
+          <td colspan="3">Lv2-R2-C3</td>
+        </tr>
+        <tr>
+          <td>
+            <i class="lv-3 fas fa-angle-down"></i>
+          </td>
+          <td>Lv3-R3-C1</td>
+          <td>Lv3-R3-C2</td>
+          <td>Lv3-R3-C3</td>
+          <td colspan="2">Lv3-R3-C4</td>
         </tr>
         <tr>
           <td></td>
-          <td>1</td>
-          <td>シングル</td>
-          <td>JP</td>
-          <td>2019/4</td>
-          <td>2019/5/10 12:35</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>100,000</td>
-          <td>100,000</td>
-          <td>5,000</td>
-          <td>完了</td>
-          <td></td>
+          <td>Lv4-R4-C1</td>
+          <td>Lv4-R4-C2</td>
+          <td>Lv4-R4-C3</td>
+          <td>Lv4-R4-C4</td>
+          <td>Lv4-R4-C5</td>
         </tr>
         <tr>
           <td></td>
-          <td>2</td>
-          <td>アルバム</td>
-          <td>JP</td>
-          <td>2019/4</td>
-          <td>2019/5/10 12:35</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>120,000</td>
-          <td>120,000</td>
-          <td>6,000</td>
-          <td>完了</td>
-          <td></td>
+          <td>Lv4-R5-C1</td>
+          <td>Lv4-R5-C2</td>
+          <td>Lv4-R5-C3</td>
+          <td>Lv4-R5-C4</td>
+          <td>Lv4-R5-C5</td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.html-table {
+  text-align: left;
+}
+.table th,
+.table td {
+  padding: 5px 8px;
+}
+.expand-cursor {
+  width: 10px;
+}
+.lv-1 {
+  margin-left: 0px;
+}
+.lv-2 {
+  margin-left: 12px;
+}
+.lv-3 {
+  margin-left: 24px;
+}
+</style>
