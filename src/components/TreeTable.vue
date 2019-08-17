@@ -13,7 +13,7 @@ export default {
   render(h) {
     // const rows = this.rows || [];
     return (
-      <table class="table table-border">
+      <table class="table table-bordered">
         <thead>
           <tr>
             <th class="expand-cursor"></th>
