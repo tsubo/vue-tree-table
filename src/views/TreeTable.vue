@@ -12,6 +12,20 @@
         <th>Col-5</th>
       </template>
 
+      <!-- <template v-slot:header_for_rowspan>
+        <tr>
+          <th rowspan="2"></th>
+          <th rowspan="2">Col-1</th>
+          <th rowspan="2">Col-2</th>
+          <th rowspan="2">Col-3</th>
+          <th colspan="2">Col-4</th>
+        </tr>
+        <tr>
+          <th>Col-4-1</th>
+          <th>Col-4-2</th>
+        </tr>
+      </template> -->
+
       <template v-slot:rowLevel_1="slotProps">
         <td>{{ slotProps.col_1 }}</td>
         <td colspan="4">{{ slotProps.col_2 }}</td>

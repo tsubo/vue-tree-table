@@ -13,12 +13,23 @@ export default {
   render(h) {
     return (
       <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th class="header-cursor"></th>
-            { this.$slots.header }
-          </tr>
-        </thead>
+        { // header スコープがある時だけ、ヘッダをレンダリングする
+          ('header' in this.$scopedSlots) && (
+            <thead>
+              <tr>
+                <th class="header-icon"></th>
+                { this.$slots.header }
+              </tr>
+            </thead>
+          )
+        }
+        { // ヘッダで rowspan を使いたい時はこのスロットを使う
+          ('header_for_rowspan' in this.$scopedSlots) && (
+            <thead>
+              { this.$slots.header_for_rowspan }
+            </thead>
+          )
+        }
         <tbody>
           { this.renderRows(this.datas, 1, []) }
         </tbody>
@@ -45,10 +56,10 @@ export default {
             <i class={ this.iconClass(data, level) }></i>
           </td>
           {
-            // 親コンポーネントの slot で icon カラム以外の td をレンダリング
-            (`rowLevel_${level}` in this.$scopedSlots) && (
-              this.$scopedSlots[`rowLevel_${level}`](data)
-            )
+            // rowLevel_X の名前付きスコープをレンダリング
+            (`rowLevel_${level}` in this.$scopedSlots)
+              ? this.$scopedSlots[`rowLevel_${level}`](data)
+              : (<td class="row-level-slot-error">{`rowLevel_${level} のスロットを記述してください。`}</td>)
           }
         </tr>
       );
@@ -70,7 +81,7 @@ export default {
 .table td {
   padding: 5px 8px;
 }
-.header-cursor {
+.header-icon {
   width: 10px;
 }
 i.level-1 {
@@ -82,5 +93,8 @@ i.level-2 {
 i.level-3 {
   margin-left: 20px;
   margin-right: 1px;
+}
+.row-level-slot-error {
+  color: red;
 }
 </style>
