@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     onClick(data) {
+      // eslint-disable-next-line
       alert(data.col1);
     },
   },

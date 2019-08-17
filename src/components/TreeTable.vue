@@ -9,8 +9,7 @@ export default {
     },
   },
 
-  // eslint-disable-next-line
-  render(h) {
+  render() {
     return (
       <table class="table table-bordered">
         { // header スコープがある時だけ、ヘッダをレンダリングする
@@ -42,7 +41,7 @@ export default {
       return datas.reduce((acc, data) => {
         const row = this.renderRow(data, level);
         acc.push(row);
-        if ('children' in data) {
+        if (this.hasChildren(data)) {
           // 入れ子になっている row をレンダリング
           return this.renderRows(data.children, level + 1, acc);
         }
@@ -51,9 +50,15 @@ export default {
     },
     renderRow(data, level) {
       return (
-        <tr class={ this.levelClass(data, level) }>
-          <td onClick={ e => this.onIconClick(e) }>
-            <i class={ this.iconClass(data, level) }></i>
+        <tr class={ this.rowClass(data, level) }>
+          <td>
+            {
+              (this.hasChildren(data)) && (
+                <a href="" onClick={ e => this.onIconClick(e, data) }>
+                  <i class={ this.iconClass() }></i>
+                </a>
+              )
+            }
           </td>
           {
             // rowLevel_X の名前付きスコープをレンダリング
@@ -64,16 +69,31 @@ export default {
         </tr>
       );
     },
-    onIconClick(e) {
-      console.log(e);
+    hasChildren(data) {
+      return ('children' in data);
     },
-    levelClass(data, level) {
-      return ('children' in data) ? `level-${level}` : '';
+    onIconClick(e, data) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log(data.hide);
+      if (this.hasChildren(data)) {
+        if (!('hide' in data)) {
+          // eslint-disable-next-line
+          data.hide = true;
+        }
+        // eslint-disable-next-line
+        data.hide = !data.hide;
+      }
+      console.log(data.hide);
     },
-    iconClass(data, level) {
-      const icon = 'fas fa-angle-down';
-      const levelClass = this.levelClass(data, level);
-      return ('children' in data) ? `${levelClass} ${icon}` : '';
+    rowClass(data, level) {
+      const levelClass = this.hasChildren(data) ? `level-${level}` : '';
+      const hideClass = data.hide ? 'hide' : '';
+      return `${levelClass} ${hideClass}`;
+    },
+    iconClass() {
+      const icon = 'fas fa-angle-right';
+      return icon;
     },
   },
 };
@@ -87,15 +107,24 @@ export default {
 .header-icon {
   width: 10px;
 }
-i.level-1 {
-  margin-left: 0px;
+td {
+  a {
+    color: inherit;
+  }
 }
-i.level-2 {
-  margin-left: 10px;
+i {
+  padding: 2px 7px;
 }
-i.level-3 {
-  margin-left: 20px;
-  margin-right: 1px;
+tr {
+  &.level-1 a {
+    margin-left: 0px;
+  }
+  &.level-2 a{
+    margin-left: 10px;
+  }
+  &.level-3 a{
+    margin-left: 20px;
+  }
 }
 .row-level-slot-error {
   color: red;
