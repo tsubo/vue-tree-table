@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import HtmlTable from './views/HtmlTable.vue';
 import TreeTable from './views/TreeTable.vue';
+import VueTable from './views/VueTable.vue';
 
 Vue.use(Router);
 
@@ -14,6 +15,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home,
+    },
+    {
+      path: '/vue-table',
+      name: 'vue-table',
+      component: VueTable,
     },
     {
       path: '/html-table',

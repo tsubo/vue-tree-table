@@ -4,7 +4,7 @@
 
     <table class="table table-bordered">
       <thead>
-        <th class="expand-cursor"></th>
+        <th class="expand-icon"></th>
         <th>Col-1</th>
         <th>Col-2</th>
         <th>Col-3</th>
@@ -65,7 +65,7 @@
 .table td {
   padding: 5px 8px;
 }
-.expand-cursor {
+.expand-icon {
   width: 10px;
 }
 .lv-1 {
