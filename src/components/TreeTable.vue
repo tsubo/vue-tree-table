@@ -52,7 +52,7 @@ export default {
     renderRow(data, level) {
       return (
         <tr class={ this.levelClass(data, level) }>
-          <td>
+          <td onClick={ e => this.onIconClick(e) }>
             <i class={ this.iconClass(data, level) }></i>
           </td>
           {
@@ -63,6 +63,9 @@ export default {
           }
         </tr>
       );
+    },
+    onIconClick(e) {
+      console.log(e);
     },
     levelClass(data, level) {
       return ('children' in data) ? `level-${level}` : '';
@@ -96,5 +99,8 @@ i.level-3 {
 }
 .row-level-slot-error {
   color: red;
+}
+.hide {
+  display: none;
 }
 </style>
