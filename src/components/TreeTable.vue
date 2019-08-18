@@ -1,4 +1,31 @@
 <script>
+export function countTreeDatas(datas, level = 0, accumuratior = []) {
+  return datas.reduce((acc, data) => {
+    // eslint-disable-next-line
+    acc[level] = (acc[level] | 0) + 1;
+    if ('children' in data) {
+      countTreeDatas(data.children, level + 1, acc);
+    }
+    return acc;
+  }, accumuratior);
+}
+
+export function deleteTreeDatas(datas, target, conditionFunc = data => data.id === target.id) {
+  datas.forEach((data, index) => {
+    if (conditionFunc(data)) {
+      datas.splice(index, 1);
+      return;
+    }
+    if ('children' in data) {
+      deleteTreeDatas(data.children, target, conditionFunc);
+      if (data.children.length === 0) {
+        // eslint-disable-next-line
+        delete data.children;
+      }
+    }
+  });
+}
+
 export default {
   name: 'TreeTable',
 

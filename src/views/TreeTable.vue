@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import TreeTable from '../components/TreeTable.vue';
+import TreeTable, { countTreeDatas, deleteTreeDatas } from '../components/TreeTable.vue';
 
 export default {
   components: {
@@ -201,13 +201,13 @@ export default {
     };
   },
   created() {
-    this.rowCounts = this.countTreeDatasByLevel(this.datas);
+    this.rowCounts = countTreeDatas(this.datas);
   },
   watch: {
     datas: {
       // eslint-disable-next-line
       handler(val) {
-        this.rowCounts = this.countTreeDatasByLevel(this.datas);
+        this.rowCounts = countTreeDatas(this.datas);
       },
       deep: true,
     },
@@ -218,35 +218,7 @@ export default {
       alert(target.id);
     },
     onDelete(target) {
-      // this.deleteDataFromTreeTableDatas(this.datas, target, data => data.id === target.id);
-      this.deleteFromTreeDatas(this.datas, target);
-    },
-    // TODO: TreeTable コンポーネント側に移せないか？
-    deleteFromTreeDatas(datas, target, conditionFunc = data => data.id === target.id) {
-      datas.forEach((data, index) => {
-        if (conditionFunc(data)) {
-          datas.splice(index, 1);
-          return;
-        }
-        if ('children' in data) {
-          this.deleteFromTreeDatas(data.children, target, conditionFunc);
-          if (data.children.length === 0) {
-            // eslint-disable-next-line
-            delete data.children;
-          }
-        }
-      });
-    },
-    // TODO: TreeTable コンポーネント側に移せないか？
-    countTreeDatasByLevel(datas, level = 0, accumuratior = []) {
-      return datas.reduce((acc, data) => {
-        // eslint-disable-next-line
-        acc[level] = (acc[level] | 0) + 1;
-        if ('children' in data) {
-          this.countTreeDatasByLevel(data.children, level + 1, acc);
-        }
-        return acc;
-      }, accumuratior);
+      deleteTreeDatas(this.datas, target);
     },
   },
 };
