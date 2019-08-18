@@ -2,17 +2,10 @@
 export default {
   name: 'TreeTable',
 
-  props: {
-    datas: {
-      type: Array,
-      required: true,
-    },
-  },
-
   render() {
     return (
       <table class="table table-bordered">
-        { // header スコープがある時だけ、ヘッダをレンダリングする
+        { // header スロットがある時、ヘッダをレンダリングする
           ('header' in this.$scopedSlots) && (
             <thead>
               <tr>
@@ -23,39 +16,56 @@ export default {
           )
         }
         { // ヘッダで rowspan を使いたい時はこのスロットを使う
-          ('header_for_rowspan' in this.$scopedSlots) && (
+          ('custom_header' in this.$scopedSlots) && (
             <thead>
-              { this.$slots.header_for_rowspan }
+              { this.$slots.custom_header}
             </thead>
           )
         }
         <tbody>
-          { this.renderRows(this.datas, 1, []) }
+          { this.renderRows(this.rows, 1, []) }
         </tbody>
       </table>
     );
   },
 
+  props: {
+    datas: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      rows: this.datas,
+    };
+  },
+
+  created() {
+    this.initChildren(this.rows, 1, false);
+  },
+
   methods: {
-    renderRows(datas, level, accumulator) {
-      return datas.reduce((acc, data) => {
-        const row = this.renderRow(data, level);
-        acc.push(row);
-        if (this.hasChildren(data)) {
+    renderRows(rows, level, accumulator) {
+      return rows.reduce((acc, row) => {
+        const rowNode = this.renderRow(row, level);
+        acc.push(rowNode);
+        if (this.hasChildren(row)) {
           // 入れ子になっている row をレンダリング
-          return this.renderRows(data.children, level + 1, acc);
+          return this.renderRows(row.children, level + 1, acc);
         }
         return acc;
       }, accumulator);
     },
-    renderRow(data, level) {
+    renderRow(row, level) {
       return (
-        <tr class={ this.rowClass(data, level) }>
+        <tr class={ this.rowClass(row, level) }>
           <td>
             {
-              (this.hasChildren(data)) && (
-                <a href="" onClick={ e => this.onIconClick(e, data) }>
-                  <i class={ this.iconClass() }></i>
+              (this.hasChildren(row)) && (
+                <a href="" onClick={ e => this.onIconClick(e, row) }>
+                  <i class={ this.iconClass(row) }></i>
                 </a>
               )
             }
@@ -63,37 +73,61 @@ export default {
           {
             // rowLevel_X の名前付きスコープをレンダリング
             (`rowLevel_${level}` in this.$scopedSlots)
-              ? this.$scopedSlots[`rowLevel_${level}`](data)
+              ? this.$scopedSlots[`rowLevel_${level}`](row)
               : (<td class="row-level-slot-error">{`rowLevel_${level} のスロットを記述してください。`}</td>)
           }
         </tr>
       );
     },
-    hasChildren(data) {
-      return ('children' in data);
+    initChildren(rows, level, isOpen) {
+      const isHide = !isOpen;
+      rows.forEach((row) => {
+        // オブジェクトへのプロパティ追加を Vue に検知させる為、this.$set() を使用する
+        this.$set(row, 'isOpen', isOpen);
+        if (level === 1) {
+          this.$set(row, 'isHide', false);
+        } else {
+          this.$set(row, 'isHide', isHide);
+        }
+        if (this.hasChildren(row)) {
+          this.initChildren(row.children, level + 1, isOpen);
+        }
+      });
     },
-    onIconClick(e, data) {
+    onIconClick(e, row) {
       e.preventDefault();
       e.stopPropagation();
-      console.log(data.hide);
-      if (this.hasChildren(data)) {
-        if (!('hide' in data)) {
-          // eslint-disable-next-line
-          data.hide = true;
-        }
-        // eslint-disable-next-line
-        data.hide = !data.hide;
-      }
-      console.log(data.hide);
+      this.toggleIsOpen(row);
     },
-    rowClass(data, level) {
-      const levelClass = this.hasChildren(data) ? `level-${level}` : '';
-      const hideClass = data.hide ? 'hide' : '';
+    toggleIsOpen(row) {
+      // eslint-disable-next-line
+      row.isOpen = !row.isOpen;
+      this.setIsHideToChildren(row, !row.isOpen);
+    },
+    setIsHideToChildren(row, isHide) {
+      if (this.hasChildren(row)) {
+        row.children.forEach((childRow) => {
+          // eslint-disable-next-line
+          childRow.isHide = isHide;
+
+          if (childRow.isOpen && this.hasChildren(childRow)) {
+            this.setIsHideToChildren(childRow, isHide);
+          }
+        });
+      }
+    },
+    hasChildren(row) {
+      return ('children' in row);
+    },
+    // TODO: computed にできないか？
+    rowClass(row, level) {
+      const levelClass = this.hasChildren(row) ? `level-${level}` : '';
+      const hideClass = row.isHide ? 'hide' : '';
       return `${levelClass} ${hideClass}`;
     },
-    iconClass() {
-      const icon = 'fas fa-angle-right';
-      return icon;
+    // TODO: computed にできないか？
+    iconClass(row) {
+      return row.isOpen ? 'fas fa-angle-down' : 'fas fa-angle-right';
     },
   },
 };
