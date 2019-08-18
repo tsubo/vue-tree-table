@@ -2,29 +2,38 @@
   <div class="tree-table mx-5">
     <h1>Tree Table</h1>
 
-    <div id="table-nav" class="text-right">
-      <button class="btn btn-outline-primary btn-sm" @click="$refs.tree_table.closeTable()">
-        全て閉じる
-      </button>
-      <button class="btn btn-outline-primary btn-sm" @click="$refs.tree_table.openTable()">
-        全て開く
-      </button>
+    <div id="table-nav" class="row">
+      <div class="col">
+        <ul>
+          <li v-for="(rowCount, index) in rowCounts" :key="index">
+            Lv-{{ index + 1 }}: {{ rowCount }} 件
+          </li>
+        </ul>
+      </div>
+      <div class="col text-right">
+        <button class="btn btn-outline-primary btn-sm" @click="$refs.tree_table.closeTable()">
+          全て閉じる
+        </button>
+        <button class="btn btn-outline-primary btn-sm" @click="$refs.tree_table.openTable()">
+          全て開く
+        </button>
+      </div>
     </div>
 
     <tree-table :datas="datas" ref="tree_table">
 
       <!-- 通常のヘッダ：tr とアイコン用の th は記述しない -->
-      <template v-slot:header>
+      <!-- <template v-slot:header>
         <th>ID</th>
         <th>Col-1</th>
         <th>Col-2</th>
         <th>Col-3</th>
         <th>Col-4</th>
         <th class="action">Col-5</th>
-      </template>
+      </template> -->
 
       <!-- カスタムヘッダ：tr も記述する。アイコン用の th も記述する -->
-      <!-- <template v-slot:custom_header>
+      <template v-slot:custom_header>
         <tr>
           <th rowspan="2" class="header-icon"></th>
           <th rowspan="2">ID</th>
@@ -37,7 +46,7 @@
           <th>Col-3-1</th>
           <th>Col-3-2</th>
         </tr>
-      </template> -->
+      </template>
 
       <!-- ネスト階層レベル１：tr とアイコン用の td は記述しない -->
       <template v-slot:rowLevel_1="slotProps">
@@ -94,6 +103,7 @@ export default {
   },
   data() {
     return {
+      rowCounts: [],
       datas: [
         // ネスト階層レベル１
         {
@@ -190,6 +200,18 @@ export default {
       ],
     };
   },
+  created() {
+    this.rowCounts = this.countTreeDatasByLevel(this.datas);
+  },
+  watch: {
+    datas: {
+      // eslint-disable-next-line
+      handler(val) {
+        this.rowCounts = this.countTreeDatasByLevel(this.datas);
+      },
+      deep: true,
+    },
+  },
   methods: {
     onClick(target) {
       // eslint-disable-next-line
@@ -197,22 +219,34 @@ export default {
     },
     onDelete(target) {
       // this.deleteDataFromTreeTableDatas(this.datas, target, data => data.id === target.id);
-      this.deleteDataFromTreeTableDatas(this.datas, target);
+      this.deleteFromTreeDatas(this.datas, target);
     },
-    deleteDataFromTreeTableDatas(datas, target, conditionFunc = data => data.id === target.id) {
+    // TODO: TreeTable コンポーネント側に移せないか？
+    deleteFromTreeDatas(datas, target, conditionFunc = data => data.id === target.id) {
       datas.forEach((data, index) => {
         if (conditionFunc(data)) {
           datas.splice(index, 1);
           return;
         }
         if ('children' in data) {
-          this.deleteDataFromTreeTableDatas(data.children, target, conditionFunc);
+          this.deleteFromTreeDatas(data.children, target, conditionFunc);
           if (data.children.length === 0) {
             // eslint-disable-next-line
             delete data.children;
           }
         }
       });
+    },
+    // TODO: TreeTable コンポーネント側に移せないか？
+    countTreeDatasByLevel(datas, level = 0, accumuratior = []) {
+      return datas.reduce((acc, data) => {
+        // eslint-disable-next-line
+        acc[level] = (acc[level] | 0) + 1;
+        if ('children' in data) {
+          this.countTreeDatasByLevel(data.children, level + 1, acc);
+        }
+        return acc;
+      }, accumuratior);
     },
   },
 };
