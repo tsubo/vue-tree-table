@@ -4,8 +4,8 @@
 
     <div id="table-nav" class="row">
       <div class="col">
-        <ul>
-          <li v-for="(rowCount, index) in rowCounts" :key="index">
+        <ul class="list-group list-group-horizontal">
+          <li class="list-group-item" v-for="(rowCount, index) in rowCounts" :key="index">
             Lv-{{ index + 1 }}: {{ rowCount }} 件
           </li>
         </ul>
@@ -273,6 +273,14 @@ td {
 #table-nav {
   .btn {
     margin: 4px;
+  }
+}
+.list-group {
+  font-size: 0.7em;
+  margin-bottom: 5px;
+
+  .list-group-item {
+    padding: 5px 10px;
   }
 }
 </style>
