@@ -2,7 +2,16 @@
   <div class="tree-table mx-5">
     <h1>Tree Table</h1>
 
-    <tree-table :datas="datas">
+    <div id="table-nav" class="text-right">
+      <button class="btn btn-outline-secondary btn-sm" @click="$refs.tree_table.closeTable()">
+        全て閉じる
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" @click="$refs.tree_table.openTable()">
+        全て開く
+      </button>
+    </div>
+
+    <tree-table :datas="datas" ref="tree_table">
 
       <!-- 通常のヘッダ：tr とアイコン用の th は記述しない -->
       <!-- <template v-slot:header>
@@ -181,10 +190,19 @@ export default {
   width: 60px;
 }
 .btn-sm {
-  width: 60px;
   font-size: 0.7em;
+}
+td {
+  .btn-sm {
+    width: 60px;
+  }
 }
 .action {
   width: 10px;
+}
+#table-nav {
+  .btn {
+    margin: 4px;
+  }
 }
 </style>

@@ -116,16 +116,33 @@ export default {
         });
       }
     },
+    closeTable() {
+      this.foldAllRows(this.rows, false);
+    },
+    openTable() {
+      this.foldAllRows(this.rows, true);
+    },
+    foldAllRows(rows, isOpen, level = 1) {
+      rows.forEach((row) => {
+        // eslint-disable-next-line
+        row.isOpen = isOpen;
+        if (level !== 1) {
+          // eslint-disable-next-line
+          row.isHide = !isOpen;
+        }
+        if (this.hasChildren(row)) {
+          this.foldAllRows(row.children, isOpen, level + 1);
+        }
+      });
+    },
     hasChildren(row) {
       return ('children' in row);
     },
-    // TODO: computed にできないか？
     rowClass(row, level) {
       const levelClass = this.hasChildren(row) ? `level-${level}` : '';
       const hideClass = row.isHide ? 'hide' : '';
       return `${levelClass} ${hideClass}`;
     },
-    // TODO: computed にできないか？
     iconClass(row) {
       return row.isOpen ? 'fas fa-angle-down' : 'fas fa-angle-right';
     },
@@ -153,10 +170,10 @@ tr {
   &.level-1 a {
     margin-left: 0px;
   }
-  &.level-2 a{
+  &.level-2 a {
     margin-left: 10px;
   }
-  &.level-3 a{
+  &.level-3 a {
     margin-left: 20px;
   }
 }
