@@ -50,7 +50,7 @@ export default {
           )
         }
         <tbody>
-          { this.renderRows(this.rows, 1, []) }
+          { this.renderRows(this.rows) }
         </tbody>
       </table>
     );
@@ -74,18 +74,21 @@ export default {
   },
 
   methods: {
-    renderRows(rows, level, accumulator) {
+    renderRows(rows, level = 1, accumulator = [], indexs = []) {
       return rows.reduce((acc, row) => {
-        const rowNode = this.renderRow(row, level);
+        // ネスト階層毎に index を採番
+        // eslint-disable-next-line
+        indexs[level - 1] = (indexs[level - 1] | 0) + 1;
+        const rowNode = this.renderRow(row, level, indexs[level - 1]);
         acc.push(rowNode);
         if (this.hasChildren(row)) {
           // 入れ子になっている row をレンダリング
-          return this.renderRows(row.children, level + 1, acc);
+          return this.renderRows(row.children, level + 1, acc, indexs);
         }
         return acc;
       }, accumulator);
     },
-    renderRow(row, level) {
+    renderRow(row, level, index) {
       return (
         <tr class={ this.rowClass(row, level) }>
           <td>
@@ -100,7 +103,10 @@ export default {
           {
             // rowLevel_X の名前付きスコープをレンダリング
             (`rowLevel_${level}` in this.$scopedSlots)
-              ? this.$scopedSlots[`rowLevel_${level}`](row)
+              ? this.$scopedSlots[`rowLevel_${level}`]({
+                row,
+                index,
+              })
               : (<td class="row-level-slot-error">{`rowLevel_${level} のスロットを記述してください。`}</td>)
           }
         </tr>

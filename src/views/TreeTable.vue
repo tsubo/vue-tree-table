@@ -24,6 +24,7 @@
 
       <!-- 通常のヘッダ：tr とアイコン用の th は記述しない -->
       <!-- <template v-slot:header>
+        <th>No</th>
         <th>ID</th>
         <th>Col-1</th>
         <th>Col-2</th>
@@ -36,6 +37,7 @@
       <template v-slot:custom_header>
         <tr>
           <th rowspan="2" class="header-icon"></th>
+          <th rowspan="2">No</th>
           <th rowspan="2">ID</th>
           <th rowspan="2">Col-1</th>
           <th rowspan="2">Col-2</th>
@@ -49,44 +51,48 @@
       </template>
 
       <!-- ネスト階層レベル１：tr とアイコン用の td は記述しない -->
-      <template v-slot:rowLevel_1="slotProps">
-        <td>{{ slotProps.id }}</td>
-        <td colspan="4">{{ slotProps.col_1 }}</td>
+      <template v-slot:rowLevel_1="{row, index}">
+        <td>{{ index }}</td>
+        <td>{{ row.id }}</td>
+        <td colspan="4">{{ row.col_1 }}</td>
         <td>
-          <button class="btn btn-primary btn-sm" @click="onClick(slotProps)">Col-1</button>
+          <button class="btn btn-primary btn-sm" @click="onClick(row)">Col-1</button>
         </td>
       </template>
 
       <!-- ネスト階層レベル２：tr とアイコン用の td は記述しない -->
-      <template v-slot:rowLevel_2="slotProps">
-        <td>{{ slotProps.id }}</td>
-        <td>{{ slotProps.col_1 }}</td>
-        <td colspan="3">{{ slotProps.col_2 }}</td>
+      <template v-slot:rowLevel_2="{row, index}">
+        <td>{{ index }}</td>
+        <td>{{ row.id }}</td>
+        <td>{{ row.col_1 }}</td>
+        <td colspan="3">{{ row.col_2 }}</td>
         <td>
-          <button class="btn btn-danger btn-sm" @click="onDelete(slotProps)">Delete</button>
+          <button class="btn btn-danger btn-sm" @click="onDelete(row)">Delete</button>
         </td>
       </template>
 
       <!-- ネスト階層レベル３：tr とアイコン用の td は記述しない -->
-      <template v-slot:rowLevel_3="slotProps">
-        <td>{{ slotProps.id }}</td>
-        <td>{{ slotProps.col_1 }}</td>
-        <td>{{ slotProps.col_2 }}</td>
-        <td colspan="2">{{ slotProps.col_3 }}</td>
+      <template v-slot:rowLevel_3="{row, index}">
+        <td>{{ index }}</td>
+        <td>{{ row.id }}</td>
+        <td>{{ row.col_1 }}</td>
+        <td>{{ row.col_2 }}</td>
+        <td colspan="2">{{ row.col_3 }}</td>
         <td>
-          <button class="btn btn-warning btn-sm" @click="onClick(slotProps)">Col-3</button>
+          <button class="btn btn-warning btn-sm" @click="onClick(row)">Col-3</button>
         </td>
       </template>
 
       <!-- ネスト階層レベル４：tr とアイコン用の td は記述しない -->
-      <template v-slot:rowLevel_4="slotProps">
-        <td>{{ slotProps.id }}</td>
-        <td>{{ slotProps.col_1 }}</td>
-        <td>{{ slotProps.col_2 }}</td>
-        <td>{{ slotProps.col_3 }}</td>
-        <td>{{ slotProps.col_4 }}</td>
+      <template v-slot:rowLevel_4="{row, index}">
+        <td>{{ index }}</td>
+        <td>{{ row.id }}</td>
+        <td>{{ row.col_1 }}</td>
+        <td>{{ row.col_2 }}</td>
+        <td>{{ row.col_3 }}</td>
+        <td>{{ row.col_4 }}</td>
         <td>
-          <button class="btn btn-danger btn-sm" @click="onDelete(slotProps)">Delete</button>
+          <button class="btn btn-danger btn-sm" @click="onDelete(row)">Delete</button>
         </td>
       </template>
 
